@@ -23,7 +23,7 @@ def geojson_to_csv(geojson_bytes):
         elif geom_type == "Point":
             lon, lat = coords[0], coords[1]
         else:
-            st.warning(f"Skipping unsupported geometry type: {geom_type}")
+            st.warning(f"Overslaan van niet-ondersteunde geometrie: {geom_type}")
             continue
 
         row = {"latitude": lat, "longitude": lon}
@@ -41,15 +41,15 @@ def geojson_to_csv(geojson_bytes):
     return output.getvalue()
 
 
-st.title("GeoJSON Line → Point CSV converter")
+st.title("GeoJSON naar CSV Converter")
 
-uploaded_file = st.file_uploader("Upload a GeoJSON file", type=["geojson", "json"])
+uploaded_file = st.file_uploader("Upload een GeoJSON bestand", type=["geojson", "json"])
 
 if uploaded_file is not None:
     csv_data = geojson_to_csv(uploaded_file.read())
 
     if csv_data:
-        st.success("Conversion successful.")
+        st.success("Conversie succesvol.")
         st.download_button(
             label="Download CSV",
             data=csv_data,
@@ -57,4 +57,4 @@ if uploaded_file is not None:
             mime="text/csv",
         )
     else:
-        st.error("No valid features found in the uploaded file.")
+        st.error("Error, geen features gevonden in het GeoJSON bestand.")
