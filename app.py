@@ -26,9 +26,11 @@ def geojson_to_csv(geojson_bytes):
             st.warning(f"Overslaan van verkeerd geometrie type: {geom_type}")
             continue
 
+        drop_columns = {"Locatienaam", "OBJECTID", "GlobalID", "locatie_ID"}
         clean_props = {
             k: v.replace("\n", " ").strip() if isinstance(v, str) else v
             for k, v in props.items()
+            if k not in drop_columns
         }
         row = {"latitude": lat, "longitude": lon}
         row.update(clean_props)
@@ -45,7 +47,7 @@ def geojson_to_csv(geojson_bytes):
     return output.getvalue()
 
 
-st.title("GeoJSON naar CSV")
+st.title("GeoJSON naar CSV Omzetten")
 
 uploaded_file = st.file_uploader("Upload een GeoJSON bestand", type=["geojson", "json"])
 
@@ -61,4 +63,4 @@ if uploaded_file is not None:
             mime="text/csv",
         )
     else:
-        st.error("Geen features gevonden in GeoJSON bestand.")
+        st.error("Geen features in GeoJSON bestand.")
